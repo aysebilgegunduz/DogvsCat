@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+dataset
+.DS_Store
+.gitignore
+.idea/
+dataset/
+deneme.csv
+sonuclar/

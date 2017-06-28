@@ -100,37 +100,55 @@ network = input_data(shape=[None, 64, 64, 3],
                      data_augmentation=img_aug)
 
 # 1: Convolution layer with 32 filters, each 3x3x3
-conv_1 = conv_2d(network, 64, 3, activation='relu', name='conv_1')
-conv_1 = conv_2d(conv_1, 32, 3, activation='relu', name='conv_11')
+conv_1 = conv_2d(network, 32, 5, activation='relu', name='conv_1')
 
 # 2: Max pooling layer
-network = max_pool_2d(conv_1, 2)
+network = max_pool_2d(conv_1, 5)
 
 # 3: Convolution layer with 64 filters
-conv_2 = conv_2d(network, 64, 3, activation='relu', name='conv_2')
-conv_2 = conv_2d(conv_2, 40, 3, activation='relu', name='conv_22')
+conv_2 = conv_2d(network, 64, 5, activation='relu', name='conv_2')
+
+# 2: Max pooling layer
+network = max_pool_2d(conv_2, 5)
 
 # 4: Convolution layer with 64 filters
-conv_3 = conv_2d(conv_2, 64, 3, activation='relu', name='conv_3')
-conv_3 = conv_2d(conv_3, 32, 3, activation='relu', name='conv_33')
+conv_3 = conv_2d(network, 32, 5, activation='relu', name='conv_3')
 
 # 5: Max pooling layer
-network = max_pool_2d(conv_3, 2)
+network = max_pool_2d(conv_3, 5)
 
-# 6: Fully-connected 512 node layer
-network = fully_connected(network, 512, activation='relu')
+# 5: Convolution layer with 64 filters
+conv_4 = conv_2d(network, 64, 5, activation='relu', name='conv_3')
 
-# 7: Dropout layer to combat overfitting
-network = dropout(network, 0.5)
+# 6: Max pooling layer
+network = max_pool_2d(conv_4, 5)
 
-# 8: Fully-connected layer with two outputs
+# 7: Convolution layer with 64 filters
+conv_5 = conv_2d(network, 32, 5, activation='relu', name='conv_3')
+
+# 8: Max pooling layer
+network = max_pool_2d(conv_5, 5)
+
+# 9: Convolution layer with 64 filters
+conv_6 = conv_2d(network, 64, 5, activation='relu', name='conv_3')
+
+# 10: Max pooling layer
+network = max_pool_2d(conv_6, 5)
+
+# 11: Fully-connected 512 node layer
+network = fully_connected(network, 1024, activation='relu')
+
+# 12: Dropout layer to combat overfitting
+network = dropout(network, 0.8)
+
+# 13: Fully-connected layer with two outputs
 network = fully_connected(network, 2, activation='softmax')
 
 # Configure how the network will be trained
 acc = Accuracy(name="Accuracy")
 network = regression(network, optimizer='adam',
                      loss='categorical_crossentropy',
-                     learning_rate=0.0005, metric=acc)
+                     learning_rate=0.0001, metric=acc)
 
 # Wrap the network in a model object
 model = tflearn.DNN(network, checkpoint_path='model_cat_dog_6.tflearn', max_checkpoints = 3,
@@ -141,7 +159,7 @@ model = tflearn.DNN(network, checkpoint_path='model_cat_dog_6.tflearn', max_chec
 ###################################
 
 model.fit(X, Y, validation_set=(X_test, Y_test), batch_size=500,
-      n_epoch=10, run_id='cat_dog_model', show_metric=True) #100 olmali test icin 1'e cektim
+      n_epoch=5, run_id='cat_dog_model', show_metric=True) #100 olmali test icin 1'e cektim
 
 model.save('cat_dog_model_final.tflearn')
 # choose images & plot the first one
