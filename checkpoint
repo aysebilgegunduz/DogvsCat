@@ -1,0 +1,4 @@
+model_checkpoint_path: "/Users/bilge/PycharmProjects/DogvsCat/cat_dog_model_final.tflearn"
+all_model_checkpoint_paths: "/Users/bilge/PycharmProjects/DogvsCat/model_cat_dog_6.tflearn-180"
+all_model_checkpoint_paths: "/Users/bilge/PycharmProjects/DogvsCat/model_cat_dog_6.tflearn-225"
+all_model_checkpoint_paths: "/Users/bilge/PycharmProjects/DogvsCat/cat_dog_model_final.tflearn"

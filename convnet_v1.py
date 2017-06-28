@@ -118,19 +118,19 @@ conv_3 = conv_2d(network, 32, 5, activation='relu', name='conv_3')
 network = max_pool_2d(conv_3, 5)
 
 # 5: Convolution layer with 64 filters
-conv_4 = conv_2d(network, 64, 5, activation='relu', name='conv_3')
+conv_4 = conv_2d(network, 64, 5, activation='relu', name='conv_4')
 
 # 6: Max pooling layer
 network = max_pool_2d(conv_4, 5)
 
 # 7: Convolution layer with 64 filters
-conv_5 = conv_2d(network, 32, 5, activation='relu', name='conv_3')
+conv_5 = conv_2d(network, 32, 5, activation='relu', name='conv_5')
 
 # 8: Max pooling layer
 network = max_pool_2d(conv_5, 5)
 
 # 9: Convolution layer with 64 filters
-conv_6 = conv_2d(network, 64, 5, activation='relu', name='conv_3')
+conv_6 = conv_2d(network, 64, 5, activation='relu', name='conv_6')
 
 # 10: Max pooling layer
 network = max_pool_2d(conv_6, 5)
@@ -148,7 +148,7 @@ network = fully_connected(network, 2, activation='softmax')
 acc = Accuracy(name="Accuracy")
 network = regression(network, optimizer='adam',
                      loss='categorical_crossentropy',
-                     learning_rate=0.0001, metric=acc)
+                     learning_rate=0.0005, metric=acc)
 
 # Wrap the network in a model object
 model = tflearn.DNN(network, checkpoint_path='model_cat_dog_6.tflearn', max_checkpoints = 3,
