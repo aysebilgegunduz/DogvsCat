@@ -31,7 +31,7 @@ test_files = sorted(glob(test_files_path))
 
 n_files = len(cat_files) + len(dog_files)
 test_n = len(test_files)
-print(n_files)
+print(test_n)
 size_image = 64
 allX = np.zeros((n_files, size_image, size_image,3), dtype='float64')
 ally = np.zeros(n_files)
@@ -100,46 +100,57 @@ network = input_data(shape=[None, 64, 64, 3],
                      data_augmentation=img_aug)
 
 # 1: Convolution layer with 32 filters, each 3x3x3
-conv_1 = conv_2d(network, 32, 5, activation='relu', name='conv_1')
+conv_1 = conv_2d(network, 32, [3,3], activation='relu', name='conv_1')
 
 # 2: Max pooling layer
-network = max_pool_2d(conv_1, 5)
+network = max_pool_2d(conv_1, [3,3])
+# 12: Dropout layer to combat overfitting
+network = dropout(network, 0.8)
 
 # 3: Convolution layer with 64 filters
-conv_2 = conv_2d(network, 64, 5, activation='relu', name='conv_2')
+conv_2 = conv_2d(network, 64, [3,3], activation='relu', name='conv_2')
 
 # 2: Max pooling layer
-network = max_pool_2d(conv_2, 5)
+network = max_pool_2d(conv_2, [3,3])
+# 12: Dropout layer to combat overfitting
+network = dropout(network, 0.8)
 
 # 4: Convolution layer with 64 filters
-conv_3 = conv_2d(network, 32, 5, activation='relu', name='conv_3')
+conv_3 = conv_2d(network, 64, [3,3], activation='relu', name='conv_3')
 
 # 5: Max pooling layer
-network = max_pool_2d(conv_3, 5)
+network = max_pool_2d(conv_3, [3,3])
+# 12: Dropout layer to combat overfitting
+network = dropout(network, 0.8)
 
 # 5: Convolution layer with 64 filters
-conv_4 = conv_2d(network, 64, 5, activation='relu', name='conv_4')
+conv_4 = conv_2d(network, 128, [3,3], activation='relu', name='conv_4')
 
 # 6: Max pooling layer
-network = max_pool_2d(conv_4, 5)
+network = max_pool_2d(conv_4, [3,3])
+# 12: Dropout layer to combat overfitting
+network = dropout(network, 0.8)
 
 # 7: Convolution layer with 64 filters
-conv_5 = conv_2d(network, 32, 5, activation='relu', name='conv_5')
+conv_5 = conv_2d(network, 256, [3,3], activation='relu', name='conv_5')
 
 # 8: Max pooling layer
-network = max_pool_2d(conv_5, 5)
+network = max_pool_2d(conv_5, [3,3])
+# 12: Dropout layer to combat overfitting
+network = dropout(network, 0.8)
 
 # 9: Convolution layer with 64 filters
-conv_6 = conv_2d(network, 64, 5, activation='relu', name='conv_6')
+conv_6 = conv_2d(network, 256, [3,3], activation='relu', name='conv_6')
 
 # 10: Max pooling layer
-network = max_pool_2d(conv_6, 5)
+network = max_pool_2d(conv_6, [3,3])
+
+# 12: Dropout layer to combat overfitting
+network = dropout(network, 0.8)
 
 # 11: Fully-connected 512 node layer
 network = fully_connected(network, 1024, activation='relu')
 
-# 12: Dropout layer to combat overfitting
-network = dropout(network, 0.8)
 
 # 13: Fully-connected layer with two outputs
 network = fully_connected(network, 2, activation='softmax')
@@ -158,16 +169,17 @@ model = tflearn.DNN(network, checkpoint_path='model_cat_dog_6.tflearn', max_chec
 # Train model for 100 epochs
 ###################################
 
-model.fit(X, Y, validation_set=(X_test, Y_test), batch_size=500,
-      n_epoch=5, run_id='cat_dog_model', show_metric=True) #100 olmali test icin 1'e cektim
+model.fit(X, Y, validation_set=(X_test, Y_test), batch_size=200,
+      n_epoch=100, run_id='cat_dog_model', show_metric=True) #100 olmali test icin 1'e cektim
 
 model.save('cat_dog_model_final.tflearn')
 # choose images & plot the first one
 result = []
 logloss = 0
-with open('deneme.csv','wb') as cs:
+
+with open('deneme.csv','w') as cs:
     writer = csv.writer(cs, delimiter=',',quoting=csv.QUOTE_NONE)
-    for i in xrange(0, len(testX)):
+    for i in range(0, len(testX)):
         im = [testX[i]]
         a = model.predict(im)
         if a[0][0]<a[0][1]:
